@@ -4,7 +4,6 @@
 # TODO implement logging
 # TODO indexes
 # TODO consolidated commits
-# TODO split out andel/stuff
 
 import BeautifulSoup as bs
 import urllib2
