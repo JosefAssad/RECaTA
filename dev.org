@@ -1,8 +1,11 @@
 * BUGS
 * FEATURES
-** 000 db migrations
+** TODO 000 db migrations
    use alembic since it's same author as sqlalchemy
-** 001 rename db tables
+** DONE 001 rename db tables
+   CLOSED: [2012-11-12 Mon 09:21]
    remove boliga from them
-** 002 relate runs to pages, listingdata to listing ,listingdata to page
-** 003 add __str__ nd __repr__ to main classes
+** DONE 002 relate runs to pages, listingdata to listing ,listingdata to page
+   CLOSED: [2012-11-12 Mon 09:21]
+** TODO 003 add __str__ and __repr__ to main classes
+** TODO 004 split out city in separate table
