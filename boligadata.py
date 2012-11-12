@@ -171,7 +171,7 @@ class DataCacher(object):
             run_id = self.session.query(DataRun).\
                      order_by(desc(DataRun.run_date)).first().id
         for page in self.session.query(DataPage).\
-                filter(DataPage.run==run_id):
+                filter(DataPage.run_id==run_id):
             self._extract_entries(page)
                 
     def _is_last_page(self, page):
@@ -187,7 +187,7 @@ class DataCacher(object):
 
     def _listingdata_to_db(self, listingdata):
         datapoint                = ListingData()
-        datapoint.listing        = listingdata['listing']
+        datapoint.listing_id     = listingdata['listing']
         datapoint.price          = listingdata['price']
         datapoint.days_available = listingdata['days_available']
         datapoint.page_id        = listingdata['page_id']
@@ -279,17 +279,16 @@ class DataCacher(object):
             if len(elements) == 17: # has picture, which adds an element
                 listing['boliga_id']      = int(elements[0].a.attrs[0][1].split('=')[1])
                 listing['postcode']       = int(elements[11].string)
-                address_tokens            = self._tokenise_addr(elements[0].contents[3]['title'])
+                address_tokens = self._tokenise_addr(elements[0].contents[3]['title'])
                 listing['street_address'] = address_tokens[0]
                 listing['boligtype']      = address_tokens[1]
                 listing['city']           = address_tokens[2]
-                #listing['address']        = elements[0].contents[3]['title']
                 listing['home_area']      = int(elements[7].string.split(' ')[0])
                 listing['ttl_area']       = int(elements[8].string.split(' ')[0])
                 listing['year_built']     = int(elements[9].string)
                 listing['rooms']          = self._rooms_strtoint((elements[3].string))
+                bolig_id                  = self._listing_to_db(listing)
                 listing_data = {}
-                bolig_id = self._listing_to_db(listing)
                 listing_data['price']     = int(''.join(elements[5].string.split('.')))
                 listing_data['days_available'] = int(elements[11].string)
                 listing_data['listing']        = bolig_id
@@ -300,19 +299,18 @@ class DataCacher(object):
             elif len(elements) == 16: # no photo
                 listing['boliga_id']      = int(elements[0].a.attrs[0][1].split('=')[1])
                 listing['postcode']       = int(elements[11].string)
-                address_tokens            = self._tokenise_addr(elements[0].contents[3]['title'])
+                address_tokens = self._tokenise_addr(elements[0].contents[3]['title'])
                 listing['street_address'] = address_tokens[0]
                 listing['boligtype']      = address_tokens[1]
                 listing['city']           = address_tokens[2]
-                #listing['address']        = elements[0].contents[3]['title']
                 listing['home_area']      = int(elements[7].string.split(' ')[0])
                 listing['ttl_area']       = int(elements[8].string.split(' ')[0])
                 listing['year_built']     = int(elements[9].string)
                 listing['rooms']          = self._rooms_strtoint(elements[3].string)
-                listing_data = {}
-                bolig_id = self._listing_to_db(listing)
+                bolig_id                  = self._listing_to_db(listing)
                 if assume_listingdata_unique:
                     self.session.commit()
+                listing_data = {}
                 listing_data['price'] = int(''.join(elements[4].span.string.split('.')))
                 listing_data['days_available'] = int(elements[12].span.string)
                 listing_data['listing']        = bolig_id
