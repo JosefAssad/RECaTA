@@ -35,23 +35,23 @@ assume_listings_unique=False
 assume_listingdata_unique=False
 
 
-class BoligaDataRun(Base):
-    __tablename__ = 'boligadataruns'
+class DataRun(Base):
+    __tablename__ = 'dataruns'
     id            = Column(Integer, primary_key=True)
     run_date      = Column(DateTime)
-    pages         = relationship('BoligaDataPage', backref='run')
+    pages         = relationship('DataPage', backref='run')
 
     def __init__(self, date=None):
         if not date: date = datetime.datetime.now()
         self.run_date = date
 
 
-class BoligaDataPage(Base):
-    __tablename__ = 'boligadatapages'
+class DataPage(Base):
+    __tablename__ = 'datapages'
     id            = Column(Integer, primary_key=True)
-    run_id        = Column(Integer, ForeignKey('boligadataruns.id'))
+    run_id        = Column(Integer, ForeignKey('dataruns.id'))
     page          = Column(Text)
-    listingdata   = relationship('ListingData', backref='boligadatapage')
+    listingdata   = relationship('ListingData', backref='datapage')
 
 
 class Listing(Base):
@@ -79,10 +79,10 @@ class ListingData(Base):
     listing_id     = Column(Integer, ForeignKey('listings.id'), index=True)
     price          = Column(Integer)
     days_available = Column(Integer)
-    page_id        = Column(Integer, ForeignKey('boligadatapages.id'), index=True)
+    page_id        = Column(Integer, ForeignKey('datapages.id'), index=True)
 
 
-class BoligaDataCacher(object):
+class DataCacher(object):
 
     def __init__(self):
         self.engine  = create_engine(db, echo=False)
@@ -99,11 +99,11 @@ class BoligaDataCacher(object):
 
     def update_pages(self):
         page_no = 1
-        run = BoligaDataRun()
+        run = DataRun()
         self.session.add(run)
         self.session.commit()
         while not page_no > max_pages:
-            bdp = BoligaDataPage()
+            bdp = DataPage()
             bdp.run = run.id
             bdp.page = urllib2.urlopen(base_url + str(page_no)).read()
             self.session.add(bdp)
@@ -113,10 +113,10 @@ class BoligaDataCacher(object):
 
     def update_db(self, run_id=None):
         if not run_id:
-            run_id = self.session.query(BoligaDataRun).\
-                     order_by(desc(BoligaDataRun.run_date)).first().id
-        for page in self.session.query(BoligaDataPage).\
-                filter(BoligaDataPage.run==run_id):
+            run_id = self.session.query(DataRun).\
+                     order_by(desc(DataRun.run_date)).first().id
+        for page in self.session.query(DataPage).\
+                filter(DataPage.run==run_id):
             self._extract_entries(page)
                 
     def _is_last_page(self, page):
@@ -268,19 +268,19 @@ if __name__ == '__main__':
                         action='store_true')
     args = parser.parse_args()
     if args.ipython and not args.init and not args.update_db and not args.zap and not args.update_pages:
-        bd = BoligaDataCacher()
+        bd = DataCacher()
         embed()
     if args.init and not args.update_db and not args.zap and not args.update_pages and not args.ipython:
-        bd = BoligaDataCacher()
+        bd = DataCacher()
         bd.initialise()
     elif args.zap and not args.update_db and not args.init and not args.update_pages and not args.ipython:
-        bd = BoligaDataCacher()
+        bd = DataCacher()
         bd.zap()
     elif args.update_pages and not args.update_db and not args.init and not args.zap and not args.ipython:
-        bd = BoligaDataCacher()
+        bd = DataCacher()
         bd.update_pages()
     elif args.update_db and not args.update_pages and not args.init and not args.zap and not args.ipython:
-        bd = BoligaDataCacher()
+        bd = DataCacher()
         bd.update_db()
     else:
         print IPython.__version__
