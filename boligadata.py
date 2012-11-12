@@ -11,6 +11,7 @@ import re
 import argparse
 import pdb
 import datetime
+import sys
 from IPython import embed
 from sqlalchemy import create_engine, func, desc
 from sqlalchemy import Column, Integer, String, ForeignKey, MetaData, DateTime, Text
@@ -283,4 +284,6 @@ if __name__ == '__main__':
         bd = DataCacher()
         bd.update_db()
     else:
-        parser.print_help()
+        if len(sys.argv) == 1:
+            parser.print_help()
+
