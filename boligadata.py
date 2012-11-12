@@ -283,5 +283,4 @@ if __name__ == '__main__':
         bd = DataCacher()
         bd.update_db()
     else:
-        print IPython.__version__
         parser.print_help()
