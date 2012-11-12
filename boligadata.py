@@ -81,17 +81,16 @@ class Listing(Base):
         self.rooms          = rooms
         self.city           = city
         self.boligtype      = boligtype
-        self.listingdata    = listingdata
 
     def __str__(self):
         return "Listing id: %s - Address: %s %s" %\
                (self.boliga_id, self.street_address.encode('utf-8'), self.postcode)
 
     def __repr__(self):
-        return 'Listing(%s, %s, "%s", %s, %s, %s, %s, %s, "%s", %s)'\
+        return 'Listing(%s, %s, "%s", %s, %s, %s, %s, %s, "%s")'\
                % (self.boliga_id, self.postcode, self.street_address.encode('utf-8'),
                   self.home_area, self.ttl_area, self.year_built, self.rooms,
-                  self.city.encode('utf-8'), self.boligtype.encode('utf-8'), self.listingdata)
+                  self.city.encode('utf-8'), self.boligtype.encode('utf-8'))
 
 class ListingData(Base):
     __tablename__  = 'listingdata'
