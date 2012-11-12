@@ -101,6 +101,19 @@ class ListingData(Base):
     days_available = Column(Integer)
     page_id        = Column(Integer, ForeignKey('datapages.id'), index=True)
 
+    def __init__(self, listing_id=None, price=None, days_available=None, page_id=None):
+        self.listing_id     = listing_id
+        self.price          = price
+        self.days_available = days_available
+        self.page_id        = page_id
+
+    def __repr__(self):
+        return 'ListingData(%s, %s, %s, %s)' % (self.listing_id, self.price,
+                                                self.days_available, self.page_id)
+
+    def __str__(self):
+        return 'ListingData for %s: price: %s from page %s' %\
+               (self.listing_id, self.price, self.page_id)
 
 class DataCacher(object):
 
