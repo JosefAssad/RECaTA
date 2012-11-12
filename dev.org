@@ -2,3 +2,4 @@
 * FEATURES
 ** 000 db migrations
    use alembic since it's same author as sqlalchemy
+** 002 relate runs to pages, listingdata to listing ,listingdata to page

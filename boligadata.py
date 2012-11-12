@@ -39,6 +39,7 @@ class BoligaDataRun(Base):
     __tablename__ = 'boligadataruns'
     id            = Column(Integer, primary_key=True)
     run_date      = Column(DateTime)
+    pages         = relationship('BoligaDataPage', backref='run')
 
     def __init__(self, date=None):
         if not date: date = datetime.datetime.now()
@@ -48,8 +49,9 @@ class BoligaDataRun(Base):
 class BoligaDataPage(Base):
     __tablename__ = 'boligadatapages'
     id            = Column(Integer, primary_key=True)
-    run           = Column(Integer, ForeignKey('boligadataruns.id'))
+    run_id        = Column(Integer, ForeignKey('boligadataruns.id'))
     page          = Column(Text)
+    listingdata   = relationship('ListingData', backref='boligadatapage')
 
 
 class Listing(Base):
@@ -64,6 +66,7 @@ class Listing(Base):
     rooms                 = Column(Integer)
     city                  = Column(String)
     boligtype             = Column(String)
+    listingdata           = relationship('ListingData', backref='listing')
 
     def __str__(self):
         return "Listing id: "+ str(self.boliga_id) + " - Address: " + self.address + " " + str(self.postcode)
@@ -71,9 +74,9 @@ class Listing(Base):
 
 class ListingData(Base):
     __tablename__  = 'listingdata'
-    __table_args__ = (UniqueConstraint('page_id', 'listing'),{})
+    __table_args__ = (UniqueConstraint('page_id', 'listing_id'),{})
     id             = Column(Integer, primary_key=True)
-    listing        = Column(Integer, ForeignKey('listings.id'), index=True)
+    listing_id     = Column(Integer, ForeignKey('listings.id'), index=True)
     price          = Column(Integer)
     days_available = Column(Integer)
     page_id        = Column(Integer, ForeignKey('boligadatapages.id'), index=True)
