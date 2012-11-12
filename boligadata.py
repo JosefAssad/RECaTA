@@ -55,42 +55,64 @@ class DataPage(Base):
     listingdata   = relationship('ListingData', backref='datapage')
 
 
+class City(Base):
+    __tablename__ = 'cities'
+    __table_args__ = (UniqueConstraint('postcode', 'name'),{})
+    id            = Column(Integer, primary_key=True)
+    postcode      = Column(Integer, unique=True)
+    name          = Column(String)
+    listings      = relationship('Listing', backref='city')
+
+    def __init__(self, postcode=None, name=None):
+        self.postcode = postcode
+        self.name     = name
+
+    def __str__(self):
+        return '%s %s' % (self.postcode, self.name.encode('utf-8'))
+
+    def __repr__(self):
+        return 'City(%s, %s)' % (self.postcode, self.name.encode('utf-8'))
+
+
 class Listing(Base):
     __tablename__         ='listings'
     id                    = Column(Integer, primary_key=True)
     boliga_id             = Column(Integer, unique=True)
-    postcode              = Column(Integer)
     street_address        = Column(String)
     home_area             = Column(Integer)
     ttl_area              = Column(Integer)
     year_built            = Column(Integer)
     rooms                 = Column(Integer)
-    city                  = Column(String)
+    city_id               = Column(Integer, ForeignKey('cities.id'))
     boligtype             = Column(String)
     listingdata           = relationship('ListingData', backref='listing')
 
-    def __init__(self, boliga_id=None, postcode=None, street_address=None,
+    def __init__(self, boliga_id=None, street_address=None,
                  home_area=None, ttl_area=None, year_built=None, rooms=None,
-                 city=None, boligtype=None, listingdata=None):
+                 city_id=None, boligtype=None):
         self.boliga_id      = boliga_id
-        self.postcode       = postcode
         self.street_address = street_address
         self.home_area      = home_area
         self.ttl_area       = ttl_area
         self.year_built     = year_built
         self.rooms          = rooms
-        self.city           = city
+        self.city_id        = city_id
         self.boligtype      = boligtype
 
     def __str__(self):
-        return "Listing id: %s - Address: %s %s" %\
-               (self.boliga_id, self.street_address.encode('utf-8'), self.postcode)
+        return "Listing id: %s - Address: %s %s"\
+               % (self.boliga_id,
+                  self.street_address.encode('utf-8'),
+                  self.city.postcode)
 
     def __repr__(self):
         return 'Listing(%s, %s, "%s", %s, %s, %s, %s, %s, "%s")'\
-               % (self.boliga_id, self.postcode, self.street_address.encode('utf-8'),
-                  self.home_area, self.ttl_area, self.year_built, self.rooms,
-                  self.city.encode('utf-8'), self.boligtype.encode('utf-8'))
+               % (self.boliga_id, self.city.postcode,
+                  self.street_address.encode('utf-8'),
+                  self.home_area, self.ttl_area,
+                  self.year_built, self.rooms,
+                  self.city.name.encode('utf-8'),
+                  self.boligtype.encode('utf-8'))
 
 class ListingData(Base):
     __tablename__  = 'listingdata'
@@ -177,16 +199,26 @@ class DataCacher(object):
                 self.session.rollback()
             
     def _listing_to_db(self, listing):
+        city                 = City()
+        city.postcode        = listing['postcode']
+        city.name            = listing['city']
+        try:
+            self.session.add(city)
+            self.session.commit()
+            city_id = city.id
+        except IntegrityError:
+            self.session.rollback()
+            city_id = self.session.query(City).\
+                      filter(City.postcode == city.postcode).one().id
         bolig                = Listing()
         bolig.boliga_id      = listing['boliga_id']
-        bolig.postcode       = listing['postcode']
         bolig.street_address = listing['street_address']
         bolig.home_area      = listing['home_area']
         bolig.ttl_area       = listing['ttl_area']
         bolig.year_built     = listing['year_built']
         bolig.rooms          = listing['rooms']
+        bolig.city_id        = city_id
         bolig.boligtype      = listing['boligtype']
-        bolig.city           = listing['city']
         self.session.add(bolig)
         try:
             self.session.commit()
