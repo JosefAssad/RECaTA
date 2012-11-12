@@ -69,9 +69,29 @@ class Listing(Base):
     boligtype             = Column(String)
     listingdata           = relationship('ListingData', backref='listing')
 
-    def __str__(self):
-        return "Listing id: "+ str(self.boliga_id) + " - Address: " + self.address + " " + str(self.postcode)
+    def __init__(self, boliga_id=None, postcode=None, street_address=None,
+                 home_area=None, ttl_area=None, year_built=None, rooms=None,
+                 city=None, boligtype=None, listingdata=None):
+        self.boliga_id      = boliga_id
+        self.postcode       = postcode
+        self.street_address = street_address
+        self.home_area      = home_area
+        self.ttl_area       = ttl_area
+        self.year_built     = year_built
+        self.rooms          = rooms
+        self.city           = city
+        self.boligtype      = boligtype
+        self.listingdata    = listingdata
 
+    def __str__(self):
+        return "Listing id: %s - Address: %s %s" %\
+               (self.boliga_id, self.street_address.encode('utf-8'), self.postcode)
+
+    def __repr__(self):
+        return 'Listing(%s, %s, "%s", %s, %s, %s, %s, %s, "%s", %s)'\
+               % (self.boliga_id, self.postcode, self.street_address.encode('utf-8'),
+                  self.home_area, self.ttl_area, self.year_built, self.rooms,
+                  self.city.encode('utf-8'), self.boligtype.encode('utf-8'), self.listingdata)
 
 class ListingData(Base):
     __tablename__  = 'listingdata'
