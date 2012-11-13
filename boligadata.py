@@ -238,6 +238,7 @@ class DataCacher(object):
         for boligtype in boligtyper:
             if re.match(u'.*\ %s\ i.*' % boligtype, unicode(line)):
                 [address, city] = line.split(' '+boligtype+' i')
+                if address[-1] == ',': address = address[:-1]
                 return [address, boligtype, city]
         return None
 
