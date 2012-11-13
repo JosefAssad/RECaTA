@@ -1,5 +1,6 @@
 * BUGS
 ** TODO 000 remove comma at end of street_address field
+** TODO 001 strip spaces from City.name
 * FEATURES
 ** TODO 000 db migrations
    use alembic since it's same author as sqlalchemy
@@ -11,3 +12,7 @@
 ** TODO 003 add __str__ and __repr__ to main classes
 ** TODO 004 split out city in separate table
 ** TODO 005 add City table to make analysis easier
+** TODO 006 switch to pyquery/lxml, at least 10x faster
+** TODO 007 fuzzywuzzy for address recognition?
+** TODO 008 see if pattern is useful https://github.com/clips/pattern
+
