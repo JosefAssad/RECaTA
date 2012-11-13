@@ -1,5 +1,6 @@
 * BUGS
-** TODO 000 remove comma at end of street_address field
+** DONE 000 remove comma at end of street_address field
+   CLOSED: [2012-11-13 Tue 10:53]
 ** TODO 001 strip spaces from City.name
 * FEATURES
 ** TODO 000 db migrations
