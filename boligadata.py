@@ -283,7 +283,7 @@ class DataCacher(object):
                 address_tokens = self._tokenise_addr(elements[0].contents[3]['title'])
                 listing['street_address'] = address_tokens[0]
                 listing['boligtype']      = address_tokens[1]
-                listing['city']           = address_tokens[2]
+                listing['city']           = address_tokens[2].strip()
                 listing['home_area']      = int(elements[7].string.split(' ')[0])
                 listing['ttl_area']       = int(elements[8].string.split(' ')[0])
                 listing['year_built']     = int(elements[9].string)
@@ -303,7 +303,7 @@ class DataCacher(object):
                 address_tokens = self._tokenise_addr(elements[0].contents[3]['title'])
                 listing['street_address'] = address_tokens[0]
                 listing['boligtype']      = address_tokens[1]
-                listing['city']           = address_tokens[2]
+                listing['city']           = address_tokens[2].strip()
                 listing['home_area']      = int(elements[7].string.split(' ')[0])
                 listing['ttl_area']       = int(elements[8].string.split(' ')[0])
                 listing['year_built']     = int(elements[9].string)
