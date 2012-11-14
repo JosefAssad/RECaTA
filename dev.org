@@ -1,7 +1,8 @@
 * BUGS
 ** DONE 000 remove comma at end of street_address field
    CLOSED: [2012-11-13 Tue 10:53]
-** TODO 001 strip spaces from City.name
+** DONE 001 strip spaces from City.name
+   CLOSED: [2012-11-14 Wed 15:25]
 * FEATURES
 ** TODO 000 db migrations
    use alembic since it's same author as sqlalchemy
@@ -10,11 +11,14 @@
    remove boliga from them
 ** DONE 002 relate runs to pages, listingdata to listing ,listingdata to page
    CLOSED: [2012-11-12 Mon 09:21]
-** TODO 003 add __str__ and __repr__ to main classes
-** TODO 004 split out city in separate table
-** TODO 005 add City table to make analysis easier
+** DONE 003 add __str__ and __repr__ to main classes
+   CLOSED: [2012-11-14 Wed 15:25]
+** DONE 004 split out city in separate table
+   CLOSED: [2012-11-14 Wed 15:25]
+** DONE 005 add City table to make analysis easier
+   CLOSED: [2012-11-14 Wed 15:25]
 ** TODO 006 switch to pyquery/lxml, at least 10x faster
 ** TODO 006 enable skipping city unique check
 ** TODO 007 fuzzywuzzy for address recognition?
 ** TODO 008 see if pattern is useful https://github.com/clips/pattern
-
+** TODO 009 add property to City for average price in the area
