@@ -35,7 +35,7 @@ max_pages=9999999999999999
 assume_listings_unique=False
 assume_listingdata_unique=False
 # check_city_exists: set to False if cities table is guaranteed prepopulated
-check_city_exists=True
+check_city_exists=False
 
 
 class DataRun(Base):
