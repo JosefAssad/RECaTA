@@ -34,6 +34,8 @@ max_pages=9999999999999999
 # Optimisations; use carefully
 assume_listings_unique=False
 assume_listingdata_unique=False
+# check_city_exists: set to False if cities table is guaranteed prepopulated
+check_city_exists=True
 
 
 class DataRun(Base):
@@ -202,12 +204,16 @@ class DataCacher(object):
         city                 = City()
         city.postcode        = listing['postcode']
         city.name            = listing['city']
-        try:
-            self.session.add(city)
-            self.session.commit()
-            city_id = city.id
-        except IntegrityError:
-            self.session.rollback()
+        if check_city_exists:
+            try:
+                self.session.add(city)
+                self.session.commit()
+                city_id = city.id
+            except IntegrityError:
+                self.session.rollback()
+                city_id = self.session.query(City).\
+                          filter(City.postcode == city.postcode).one().id
+        else:
             city_id = self.session.query(City).\
                       filter(City.postcode == city.postcode).one().id
         bolig                = Listing()
