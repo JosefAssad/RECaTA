@@ -14,6 +14,7 @@
 ** TODO 004 split out city in separate table
 ** TODO 005 add City table to make analysis easier
 ** TODO 006 switch to pyquery/lxml, at least 10x faster
+** TODO 006 enable skipping city unique check
 ** TODO 007 fuzzywuzzy for address recognition?
 ** TODO 008 see if pattern is useful https://github.com/clips/pattern
 
