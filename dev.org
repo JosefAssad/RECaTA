@@ -22,3 +22,4 @@
 ** TODO 007 fuzzywuzzy for address recognition?
 ** TODO 008 see if pattern is useful https://github.com/clips/pattern
 ** TODO 009 add property to City for average price in the area
+** TODO 010 migrate to bs4 with lxml
