@@ -75,6 +75,15 @@ class City(Base):
     def __repr__(self):
         return 'City(%s, %s)' % (self.postcode, self.name.encode('utf-8'))
 
+    def avg_price(self, postcode=None):
+        num_listings = 0
+        ttl_prices = 0
+        for listing in self.listings:
+            num_listings += 1
+            for listingdata in listing.listingdata:
+                ttl_prices += listingdata.price
+        return ttl_prices / num_listings
+
 
 class Listing(Base):
     __tablename__         ='listings'
