@@ -193,7 +193,7 @@ class DataCacher(object):
                 findAll('td')[2].a.renderContents()
         except AttributeError:
             return True
-        if n == '&nbsp;N\xc3\xa6ste >>':
+        if n in ['&nbsp;N\xc3\xa6ste >>', '&nbsp;N\xc3\xa6ste &gt;&gt;']:
             return False
         return True
 
