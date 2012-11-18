@@ -61,8 +61,8 @@ class City(Base):
     __tablename__ = 'cities'
     __table_args__ = (UniqueConstraint('postcode', 'name'),{})
     id            = Column(Integer, primary_key=True)
-    postcode      = Column(Integer, unique=True)
-    name          = Column(String)
+    postcode      = Column(Integer, unique=True, index=True)
+    name          = Column(String, index=True)
     listings      = relationship('Listing', backref='city')
 
     def __init__(self, postcode=None, name=None):
@@ -88,13 +88,13 @@ class City(Base):
 class Listing(Base):
     __tablename__         ='listings'
     id                    = Column(Integer, primary_key=True)
-    boliga_id             = Column(Integer, unique=True)
+    boliga_id             = Column(Integer, unique=True, index=True)
     street_address        = Column(String)
-    home_area             = Column(Integer)
-    ttl_area              = Column(Integer)
-    year_built            = Column(Integer)
-    rooms                 = Column(Integer)
-    city_id               = Column(Integer, ForeignKey('cities.id'))
+    home_area             = Column(Integer, index=True)
+    ttl_area              = Column(Integer, index=True)
+    year_built            = Column(Integer, index=True)
+    rooms                 = Column(Integer, index=True)
+    city_id               = Column(Integer, ForeignKey('cities.id'), index=True)
     boligtype             = Column(String)
     listingdata           = relationship('ListingData', backref='listing')
 
@@ -130,8 +130,8 @@ class ListingData(Base):
     __table_args__ = (UniqueConstraint('page_id', 'listing_id'),{})
     id             = Column(Integer, primary_key=True)
     listing_id     = Column(Integer, ForeignKey('listings.id'), index=True)
-    price          = Column(Integer)
-    days_available = Column(Integer)
+    price          = Column(Integer, index=True)
+    days_available = Column(Integer, index=True)
     page_id        = Column(Integer, ForeignKey('datapages.id'), index=True)
 
     def __init__(self, listing_id=None, price=None, days_available=None, page_id=None):
