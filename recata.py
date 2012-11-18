@@ -170,7 +170,8 @@ class DataCacher(object):
         self.session.commit()
         while not page_no > max_pages:
             bdp = DataPage()
-            bdp.run = run.id
+            bdp.run_id = run.id
+            print "Fetching page number %s" % (page_no,)
             bdp.page = urllib2.urlopen(base_url + str(page_no)).read()
             self.session.add(bdp)
             if self._is_last_page(bdp.page): break
