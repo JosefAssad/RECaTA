@@ -182,9 +182,14 @@ class DataCacher(object):
         if not run_id:
             run_id = self.session.query(DataRun).\
                      order_by(desc(DataRun.run_date)).first().id
+        num_pages = len(self.session.query(DataPage).\
+                        filter(DataPage.run_id==run_id).all())
+        page_no = 1
         for page in self.session.query(DataPage).\
                 filter(DataPage.run_id==run_id):
+            print "Extracting listings from page %s/%s..." % (page_no/num_pages)
             self._extract_entries(page)
+            page_no +=1
                 
     def _is_last_page(self, page):
         soup = bs.BeautifulSoup(page)
