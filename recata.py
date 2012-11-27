@@ -187,7 +187,7 @@ class DataCacher(object):
         page_no = 1
         for page in self.session.query(DataPage).\
                 filter(DataPage.run_id==run_id):
-            print "Extracting listings from page %s/%s..." % (page_no/num_pages)
+            print "Extracting listings from page %s/%s..." % (page_no,num_pages)
             self._extract_entries(page)
             page_no +=1
                 
