@@ -12,6 +12,7 @@ import argparse
 import pdb
 import datetime
 import sys
+import time
 from IPython import embed
 from sqlalchemy import create_engine, func, desc
 from sqlalchemy import Column, Integer, String, ForeignKey, MetaData, DateTime, Text
@@ -54,6 +55,7 @@ class DataPage(Base):
     id            = Column(Integer, primary_key=True)
     run_id        = Column(Integer, ForeignKey('dataruns.id'))
     page          = Column(Text)
+    page_url      = Column(String, index=True)
     listingdata   = relationship('ListingData', backref='datapage')
 
 
@@ -163,18 +165,33 @@ class DataCacher(object):
     def initialise(self):
         Base.metadata.create_all(self.engine)       
 
+    def _fetch_page(self, page_no, max_tries=None, interval=None):
+        if not max_tries: max_tries = 1
+        if not interval: interval = 5
+        page = None
+        tries = 0
+        while tries < max_tries:
+            tries += 1
+            try:
+                print "Fetching page number %s, try %s" % (page_no,tries)
+                page = urllib2.urlopen(base_url + str(page_no)).read()
+                return page
+            except:
+                time.sleep(interval)
+        return None
+
     def update_pages(self):
         page_no = 1
         run = DataRun()
         self.session.add(run)
         self.session.commit()
         while not page_no > max_pages:
-            bdp = DataPage()
-            bdp.run_id = run.id
-            print "Fetching page number %s" % (page_no,)
-            bdp.page = urllib2.urlopen(base_url + str(page_no)).read()
-            self.session.add(bdp)
-            if self._is_last_page(bdp.page): break
+            dp = DataPage()
+            dp.run_id = run.id
+            dp.page = self._fetch_page(page_no, 5, 5)
+            dp.page_url = base_url + str(page_no)
+            self.session.add(dp)
+            if self._is_last_page(dp.page): break
             page_no += 1
         self.session.commit()
 
