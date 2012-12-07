@@ -162,6 +162,12 @@ class DataCacher(object):
         meta.reflect()
         meta.drop_all()
 
+    def status_report(self):
+        pass
+
+    def fill_page_gaps(self):
+        pass
+
     def initialise(self):
         Base.metadata.create_all(self.engine)       
 
