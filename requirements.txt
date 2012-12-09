@@ -1,3 +1,4 @@
+numpy==1.6.2
 BeautifulSoup==3.2.1
 Mako==0.7.3
 MarkupSafe==0.15
@@ -9,7 +10,6 @@ ipython==0.13.1
 lxml==3.0.1
 matplotlib==1.2.0
 memory-profiler==0.18
-numpy==1.6.2
 pandas==0.9.1
 pdbpp==0.7.2
 psycopg2==2.4.5
