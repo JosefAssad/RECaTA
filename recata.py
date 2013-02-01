@@ -157,6 +157,19 @@ class DataCacher(object):
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
 
+    def zap_run_data(self, run_id):
+        page_ids = []
+        records_deleted = 0
+        # delete listingdata
+        for page in bd.session.query(DataPage.id).filter(DataPage.run_id==run_id):
+            page_ids.append(page.id)
+        for ld in bd.session.query(ListingData):
+            if ld.page_id in page_ids:
+                bd.session.delete(ld)
+                records_deleted += 1
+        bd.session.commit()
+        print "deleted %s listingdata records" % (records_deleted)
+
     def zap(self):
         meta = MetaData(self.engine)
         meta.reflect()
@@ -374,7 +387,11 @@ if __name__ == '__main__':
     parser.add_argument('--ipython', '-i',
                         help="Start an interative IPython interpreter",
                         action='store_true')
+    parser.add_argument('--zap-run-data')
     args = parser.parse_args()
+    if args.zap_run_data:
+        bd = DataCacher()
+        bd.zap_run_data(args.zap_run_data)
     if args.ipython and not args.init and not args.update_db and not args.zap and not args.update_pages:
         bd = DataCacher()
         embed()
